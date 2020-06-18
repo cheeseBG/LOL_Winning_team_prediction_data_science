@@ -136,6 +136,8 @@ def WRbasic(wl):
     print("Winning_Rate.csv's counts : " + str(len(wl)))
     print("columns : ")
     print(wl.columns.tolist())
+    print("There are "+str(wl.isna().sum().sum())+" dirty data")
+    print("We will just drop na data not at algorithm file")
 
 """
 input : winning rate dataframe
@@ -635,6 +637,7 @@ description : execute exploration of winning rate dataframe
 """
 def WRD(wl):
     WRbasic(wl)
+    wl = wl.dropna()
     rankdata(wl)
     lanedata(wl)
     namedata(wl)
@@ -649,12 +652,15 @@ description : shows each team's basic data exploration
 def WLTbasic(windata,losedata):
     print("\nWinning team data count : " + str(len(windata)))
     print("lose team data count : " + str(len(losedata)))
-    print("\nWinning team columns")
+    print("Winning team columns")
     print(windata.columns.tolist())
     print("Lose team columns")
     print(losedata.columns.tolist())
-    print("\nWe won't use 1. Unnamed column 2. vilemawKills, 3. domonionVictoryScore 4. bans 5. gameId")
+    print("We won't use 1. Unnamed column 2. vilemawKills, 3. domonionVictoryScore 4. bans 5. gameId")
     print("because they are garbage data")
+    print("There are "+str(windata.isna().sum().sum())+" dirty data at winning team data")
+    print("There are "+str(losedata.isna().sum().sum())+" dirty data at lose team data")
+    print("At here we will just drop na data, not at algorithm files")
 
 """
 input : winning team, lose team, total dataframe
@@ -663,6 +669,8 @@ description : execute exploration of winning, lose, total team's data
 """
 def WLTD(windata,losedata):
     WLTbasic(windata,losedata)
+    windata = windata.dropna()
+    losedata = losedata.dropna()
     windata = windata.drop([windata.columns[0], "vilemawKills", "dominionVictoryScore", "bans", "gameId"], axis=1)
     losedata = losedata.drop([losedata.columns[0], "vilemawKills", "dominionVictoryScore", "bans", "gameId"], axis=1) # at WLTbasic() we show raw data but we will use dataframe that arranged out with our needs so arrange data
     windata['win'] = windata['win'].apply(lambda x: True) # to use confusion matrix we set win or lose values same as other confusion matrix's element
@@ -680,9 +688,9 @@ def WLTD(windata,losedata):
     DKData(windata,losedata,sumdata)
     RKData(windata,losedata,sumdata)
 
-windata = pd.read_csv("match_winner_data_version1.csv")
-losedata =pd.read_csv("match_loser_data_version1.csv")
-wl = pd.read_csv("WinningRate.csv")
+windata = pd.read_csv("match_winner_data_version1_dirty.csv")
+losedata =pd.read_csv("match_loser_data_version1_dirty.csv")
+wl = pd.read_csv("WinningRate_dirty.csv")
 i = 1
 while True :
     print("Data science data explore")
