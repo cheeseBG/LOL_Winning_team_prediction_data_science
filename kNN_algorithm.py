@@ -1,12 +1,18 @@
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
+from sklearn.model_selection import KFold
+from sklearn import metrics
 
-# # Read dataset
-# df = pd.read_excel("data.xlsx")
-#
-# # Target class
-# tar = "win"
+
+# Read dataset
+df = pd.read_excel("data.xlsx")
+
+# Warning off
+pd.set_option('mode.chained_assignment', None)
+
+# Target class
+tar = "win"
 
 
 # 입력받은 data에 맞춰서 dataframe 수정
@@ -74,7 +80,8 @@ def normalize(data, attributes):
 
 # kNN-Algorithm function
 def kNN(data, attributes, target, hyper_k):
-    target_list = np.array(data[tar].drop_duplicates())
+
+    target_list = np.array(data[target].drop_duplicates())
 
     # Normalize all values
     data = normalize(data, attributes)
@@ -84,7 +91,7 @@ def kNN(data, attributes, target, hyper_k):
     data["DISTANCE"] = dist_series
 
     # Sorting for Computing K-nearest Data
-    sorted_data = data.sort_values(by="DISTANCE", ascending=True).head(k)
+    sorted_data = data.sort_values(by="DISTANCE", ascending=True).head(hyper_k)
 
     # Target Class 0 and 1
     class_0 = 0
@@ -104,13 +111,13 @@ def kNN(data, attributes, target, hyper_k):
     else:
         data.iat[-1, 0] = target_list[1]
 
-    return data
+    return data.drop(columns="DISTANCE")
 
-k = 5
-
-##################  Test  #########################
-# Merge test data into rear of DataFrame
-# Target class value is 'NaN'
+# k = 5
+#
+# ##################  Test  #########################
+# # Merge test data into rear of DataFrame
+# # Target class value is 'NaN'
 # df.loc[len(df)] = (np.NaN, 10, 2, 3, 4, 2)
 #
 # # Execute kNN-Algorithm
@@ -119,3 +126,81 @@ k = 5
 # # Print result DataFrame
 # print(df)
 # print("\nTest data size:", df.iat[-1, 2])
+
+
+# # KFold
+# Set KFold k = 5
+kf = KFold(n_splits=5, shuffle=True)
+kcnt = 1;
+k_range = range(2, 10)
+
+for train, test in kf.split(df):
+    train_df = df.iloc[train, :]
+    test_df = df.iloc[test, :]
+
+    train_df.reset_index(inplace=True)
+    test_df.reset_index(inplace=True
+                        )
+    train_df.drop(columns='index', inplace=True)
+    test_df.drop(columns='index', inplace=True)
+
+    accuracy_list = []
+    for k in k_range:
+        cnt = 0
+        for j in range(0, len(train_df)):
+            tmp = train_df.copy()
+            tmp2 = train_df.copy()
+            tmp.iloc[j, 0] = np.NaN
+
+            # Target class value is 'NaN'
+            tmp2.loc[len(train_df)] = np.array(tmp.iloc[j, 0:])
+            tmp2 = kNN(tmp2, attr, tar, k)
+
+            if tmp2.iloc[len(train_df), 0] == tmp2.iloc[j, 0]:
+                cnt += 1
+
+        accuracy_list.append(cnt / len(train_df))
+    max_k = accuracy_list.index(max(accuracy_list)) + 3
+
+    # Test with max k
+    cnt2 = 0
+    for i in range(0, len(test_df)):
+        tmp = test_df.copy()
+        tmp2 = test_df.copy()
+        tmp.iloc[i, 0] = np.NaN
+
+        # Target class value is 'NaN'
+        tmp2.loc[len(train_df)] = np.array(tmp.iloc[i, 0:])
+        tmp2 = kNN(tmp2, attr, tar, max_k)
+
+        if tmp2.iloc[len(test_df), 0] == tmp2.iloc[i, 0]:
+            cnt2 += 1
+    accuracy = (cnt2 / len(test_df)) * 100
+
+    print("\nKFold: " + str(kcnt))
+    print("Best hyperparmeter k = " + str(max_k))
+    print("Validation accuracy: " + str(accuracy) + " %")
+    kcnt += 1
+
+
+# Print Confusion Matrix
+# 나중에 df -> test 셋으로 바꾸기
+tar_list = []
+for j in range(0, len(df)):
+    tmp = df.copy()
+    tmp2 = df.copy()
+    tmp.iloc[j, 0] = np.NaN
+
+    # Target class value is 'NaN'
+    tmp2.loc[len(df)] = np.array(tmp.iloc[j, 0:])
+    tmp2 = kNN(tmp2, attr, tar, 5)
+
+    tar_list.append(tmp2.iloc[len(df), 0])
+
+df["Prediction"] = tar_list
+
+print("< Confusion Matrix >")
+print(metrics.confusion_matrix(df['win'], tar_list), "\n")
+
+
+
