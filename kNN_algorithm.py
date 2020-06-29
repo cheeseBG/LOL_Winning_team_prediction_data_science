@@ -41,10 +41,6 @@ def attr_list(dataframe, target):
     return attr
 
 
-# Attribute list
-attr = attr_list(df, tar)
-
-
 # Calculate distance function(Use the Euclidean distance)
 # Return distance list
 def distance(dataframe, attributes):
@@ -79,7 +75,10 @@ def normalize(data, attributes):
 
 
 # kNN-Algorithm function
-def kNN(data, attributes, target, hyper_k):
+def kNN(data, target, hyper_k):
+
+    # Create attributes list
+    attributes = attr_list(data, target)
 
     target_list = np.array(data[target].drop_duplicates())
 
@@ -119,68 +118,74 @@ def kNN(data, attributes, target, hyper_k):
 # # Merge test data into rear of DataFrame
 # # Target class value is 'NaN'
 # df.loc[len(df)] = (np.NaN, 10, 2, 3, 4, 2)
+# print("\n< Test data> ")
+# print(df.iloc[-1, :])
+#
+# print("\nHyper Parmeter K = " + str(k))
 #
 # # Execute kNN-Algorithm
-# df = kNN(df, attr, tar, k)
+# df = kNN(df, tar, k)
 #
 # # Print result DataFrame
+# print("\n< Data frame >")
 # print(df)
-# print("\nTest data size:", df.iat[-1, 2])
+# print("\n< Prediction result  >")
+# print(df.iloc[-1, :])
 
 
-# # KFold
-# Set KFold k = 5
-kf = KFold(n_splits=5, shuffle=True)
-kcnt = 1;
-k_range = range(2, 10)
-
-for train, test in kf.split(df):
-    train_df = df.iloc[train, :]
-    test_df = df.iloc[test, :]
-
-    train_df.reset_index(inplace=True)
-    test_df.reset_index(inplace=True
-                        )
-    train_df.drop(columns='index', inplace=True)
-    test_df.drop(columns='index', inplace=True)
-
-    accuracy_list = []
-    for k in k_range:
-        cnt = 0
-        for j in range(0, len(train_df)):
-            tmp = train_df.copy()
-            tmp2 = train_df.copy()
-            tmp.iloc[j, 0] = np.NaN
-
-            # Target class value is 'NaN'
-            tmp2.loc[len(train_df)] = np.array(tmp.iloc[j, 0:])
-            tmp2 = kNN(tmp2, attr, tar, k)
-
-            if tmp2.iloc[len(train_df), 0] == tmp2.iloc[j, 0]:
-                cnt += 1
-
-        accuracy_list.append(cnt / len(train_df))
-    max_k = accuracy_list.index(max(accuracy_list)) + 3
-
-    # Test with max k
-    cnt2 = 0
-    for i in range(0, len(test_df)):
-        tmp = test_df.copy()
-        tmp2 = test_df.copy()
-        tmp.iloc[i, 0] = np.NaN
-
-        # Target class value is 'NaN'
-        tmp2.loc[len(train_df)] = np.array(tmp.iloc[i, 0:])
-        tmp2 = kNN(tmp2, attr, tar, max_k)
-
-        if tmp2.iloc[len(test_df), 0] == tmp2.iloc[i, 0]:
-            cnt2 += 1
-    accuracy = (cnt2 / len(test_df)) * 100
-
-    print("\nKFold: " + str(kcnt))
-    print("Best hyperparmeter k = " + str(max_k))
-    print("Validation accuracy: " + str(accuracy) + " %")
-    kcnt += 1
+# # # KFold
+# # Set KFold k = 5
+# kf = KFold(n_splits=5, shuffle=True)
+# kcnt = 1;
+# k_range = range(2, 10)
+#
+# for train, test in kf.split(df):
+#     train_df = df.iloc[train, :]
+#     test_df = df.iloc[test, :]
+#
+#     train_df.reset_index(inplace=True)
+#     test_df.reset_index(inplace=True
+#                         )
+#     train_df.drop(columns='index', inplace=True)
+#     test_df.drop(columns='index', inplace=True)
+#
+#     accuracy_list = []
+#     for k in k_range:
+#         cnt = 0
+#         for j in range(0, len(train_df)):
+#             tmp = train_df.copy()
+#             tmp2 = train_df.copy()
+#             tmp.iloc[j, 0] = np.NaN
+#
+#             # Target class value is 'NaN'
+#             tmp2.loc[len(train_df)] = np.array(tmp.iloc[j, 0:])
+#             tmp2 = kNN(tmp2, tar, k)
+#
+#             if tmp2.iloc[len(train_df), 0] == tmp2.iloc[j, 0]:
+#                 cnt += 1
+#
+#         accuracy_list.append(cnt / len(train_df))
+#     max_k = accuracy_list.index(max(accuracy_list)) + 3
+#
+#     # Test with max k
+#     cnt2 = 0
+#     for i in range(0, len(test_df)):
+#         tmp = test_df.copy()
+#         tmp2 = test_df.copy()
+#         tmp.iloc[i, 0] = np.NaN
+#
+#         # Target class value is 'NaN'
+#         tmp2.loc[len(train_df)] = np.array(tmp.iloc[i, 0:])
+#         tmp2 = kNN(tmp2, tar, max_k)
+#
+#         if tmp2.iloc[len(test_df), 0] == tmp2.iloc[i, 0]:
+#             cnt2 += 1
+#     accuracy = (cnt2 / len(test_df)) * 100
+#
+#     print("\nKFold: " + str(kcnt))
+#     print("Best hyperparmeter k = " + str(max_k))
+#     print("Validation accuracy: " + str(accuracy) + " %")
+#     kcnt += 1
 
 
 # Print Confusion Matrix
@@ -193,14 +198,16 @@ for j in range(0, len(df)):
 
     # Target class value is 'NaN'
     tmp2.loc[len(df)] = np.array(tmp.iloc[j, 0:])
-    tmp2 = kNN(tmp2, attr, tar, 5)
+    tmp2 = kNN(tmp2, tar, 5)
 
     tar_list.append(tmp2.iloc[len(df), 0])
 
 df["Prediction"] = tar_list
 
-print("< Confusion Matrix >")
+print("\n< Confusion Matrix >")
 print(metrics.confusion_matrix(df['win'], tar_list), "\n")
 
+# Print Classification report
+print(metrics.classification_report(df['win'], tar_list))
 
 
