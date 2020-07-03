@@ -88,7 +88,7 @@ print('\n', classification_report(y_test, y_kmeans))
 predicted = classifier.predict(X_test)
 accuracy = accuracy_score(y_test, predicted)
 
-print('\n<K-Nearest Neighbors Classifier>')
+print('\n<Ensemble Learning>')
 print('Confusion matrix : \n', confusion_matrix(y_test, predicted))
 print(f'The number of testing error : ', (y_test != predicted).sum())
 print(f'Mean accuracy score: {accuracy:.3}')
