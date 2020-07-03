@@ -27,7 +27,7 @@ If you run data plotting code, you may see the various analysis of our data<br>
 
 # Real-time prediction
 
-    dirty_processing_main.py will work for real-time prediction and model analysis
+    main.py will work for real-time prediction and model analysis
 
 If you run real-time prediction, you may get the prediction of your game.<br>
 Each input should be done by hand with keyboard.<br>
