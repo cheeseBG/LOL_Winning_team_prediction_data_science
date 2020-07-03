@@ -20,7 +20,7 @@ Data plotting will show how data is consisted<br>
 
     data_explore.py will work for data plotting
 
-Data is from [here]([https://lolalytics.com/] with 10.13 patch version, Korea server and [kaggle data](https://www.kaggle.com/gyejr95/league-of-legendslol-ranked-games-2020-ver1)<br>
+Data is from [here](https://lolalytics.com/) with 10.13 patch version, Korea server and [kaggle data](https://www.kaggle.com/gyejr95/league-of-legendslol-ranked-games-2020-ver1)<br>
 First data is used for prediction result is same. To be referred.<br>
 Second data is used for prediction.<br>
 If you run data plotting code, you may see the various analysis of our data<br>
