@@ -5,9 +5,11 @@ warnings.filterwarnings(action='ignore')
 
 
 def low_outlier (df, col):
+          mean = df["Pick rate"].mean()
+          std = df["Pick rate"].std()
           for i in df.index:
                     val = df.at[i, col]
-                    if val < 0.5:
+                    if val < mean - 3 * std:
                               df.at[i,col] = np.nan
           df = df.dropna()
           df = df.reset_index(drop=True)
@@ -47,6 +49,8 @@ evt7 = 0
 evt8 = 0
 evt9 = 0
 evt10 = 0
+evt11 = 0
+evt12 = 0
 checker = 1
 while checker == 1:
 
@@ -55,7 +59,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Top: ")
                               tier_temp = input("Top's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         blueChamps.append(champ_temp)
                                         break
@@ -66,7 +70,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Jungle: ")
                               tier_temp = input("Jungle's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         blueChamps.append(champ_temp)
                                         break
@@ -77,7 +81,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Mid: ")
                               tier_temp = input("Mid's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         blueChamps.append(champ_temp)
                                         break
@@ -88,7 +92,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Bottom: ")
                               tier_temp = input("Bottom's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         blueChamps.append(champ_temp)
                                         break
@@ -99,7 +103,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Supporter: ")
                               tier_temp = input("Supporter's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         blueChamps.append(champ_temp)
                                         break
@@ -113,7 +117,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Top: ")
                               tier_temp = input("Top's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         redChamps.append(champ_temp)
                                         break
@@ -124,7 +128,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Jungle: ")
                               tier_temp = input("Jungle's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         redChamps.append(champ_temp)
                                         break
@@ -135,7 +139,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Mid: ")
                               tier_temp = input("Mid's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         redChamps.append(champ_temp)
                                         break
@@ -146,7 +150,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Bottom: ")
                               tier_temp = input("Bottom's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         redChamps.append(champ_temp)
                                         break
@@ -157,7 +161,7 @@ while checker == 1:
                     while True:
                               champ_temp = input("Supporter: ")
                               tier_temp = input("Supporter's Tier: ")
-                              valueCheck = value_checker(winning, champ_temp, tier_temp)
+                              valueCheck = value_checker(lowcheck, champ_temp, tier_temp)
                               if valueCheck == 2:
                                         redChamps.append(champ_temp)
                                         break
@@ -175,30 +179,167 @@ while checker == 1:
           
                     while True:
                               print("Event Selector")
-                              print("1: Event 1 / 2: Event 2 / 3: Event 3 / 4: Event 4 / 5: Event5")
-                              print("6: Event 6 / 7: Event 7 / 8: Event 8 / 9: Event 9 / 10: Event10  ////  0: Exit")
+                              print("1: FirstBlood / 2: FirstTower     / 3: FirstInhibitor / 4: FirstBaron   / 5: FirstDragon   / 6: FirstRiftHerald")
+                              print("7: TowerKills / 8: InhibitorKills / 9: BaronKills     / 10: DragonKills / 11: Vilemawkills / 12: riftHeraldKills  ////  0: Exit")
 
                               i=input()
                               if i == '1':
-                                        evt1 = 1 #Add Event 1
+                                        if evt1 == 0:
+                                                  evt1 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      ##event 1 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
                               elif i == '2':
-                                        evt2 = 1 #Add Event 2
+                                        if evt2 == 0:
+                                                  evt2 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      ##event 2 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
                               elif i == '3':
-                                        evt3 = 1 #Add Event 3
+                                        if evt3 == 0:
+                                                  evt3 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      ##event 3 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
                               elif i == '4':
-                                        evt4 = 1 #Add Event 4
+                                        if evt4 == 0:
+                                                  evt4 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      ##event 4 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
                               elif i == '5':
-                                        evt5 = 1 #Add Event 5
+                                        if evt5 == 0:
+                                                  evt5 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      ##event 5 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
                               elif i == '6':
-                                        evt6 = 1 #Add Event 6
+                                        if evt6 == 0:
+                                                  evt6 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      ##event 6 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
                               elif i == '7':
-                                        evt7 = 1 #Add Event 7
+                                        if evt7 == 0:
+                                                  evt7 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
+                                                  while True:
+                                                            scorecheck = input("How many scores?: ")
+                                                            if scorecheck.isdigit():
+                                                                      ##event 7 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Write digit")
+
                               elif i == '8':
-                                        evt8 = 1 #Add Event 8
+                                        if evt8 == 0:
+                                                  evt8 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
+                                                  while True:
+                                                            scorecheck = input("How many scores?: ")
+                                                            if scorecheck.isdigit():
+                                                                      ##event 8 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Write digit")
                               elif i == '9':
-                                        evt9 = 1 #Add Event 9
+                                        if evt9 == 0:
+                                                  evt9 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
+                                                  while True:
+                                                            scorecheck = input("How many scores?: ")
+                                                            if scorecheck.isdigit():
+                                                                      ##event 9 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Write digit")
                               elif i == '10':
-                                        evt10 = 1 #Add Event 10
+                                        if evt10 == 0:
+                                                  evt10 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
+                                                  while True:
+                                                            scorecheck = input("How many scores?: ")
+                                                            if scorecheck.isdigit():
+                                                                      ##event 10 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Write digit")
+                              elif i == '11':
+                                        if evt11 == 0:
+                                                  evt11 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
+                                                  while True:
+                                                            scorecheck = input("How many scores?: ")
+                                                            if scorecheck.isdigit():
+                                                                      ##event 11 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Write digit")
+                              elif i == '12':
+                                        if evt12 == 0:
+                                                  evt12 = 1
+                                                  while True:
+                                                            teamcheck = input("Which Team? (blue / red): ")
+                                                            if teamcheck.lower() == 'blue' or teamcheck.lower() == 'red':
+                                                                      break;
+                                                            else:
+                                                                      print("Check the team")
+                                                  while True:
+                                                            scorecheck = input("How many scores?: ")
+                                                            if scorecheck.isdigit():
+                                                                      ##event 12 activate
+                                                                      break;
+                                                            else:
+                                                                      print("Write digit")
                               elif i == '0':
                                         checker = 0
                                         break
