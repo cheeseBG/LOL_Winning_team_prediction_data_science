@@ -52,15 +52,18 @@ from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=123456)
 
-# Random Forest
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 
-# Tree의 개수 Random Forest 분류 모듈 생성
-rf = RandomForestClassifier(n_estimators=100, oob_score=True, random_state=123456)
-# rfc.fin()에 훈련 데이터를 입력해 Random Forest 모듈을 학습
-rf.fit(X_train, y_train)  # 소환사 코드를 float로 바꿔줘야함
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+
+from sklearn.neighbors import KNeighborsClassifier
+classifier = KNeighborsClassifier(n_neighbors=5)
+classifier.fit(X_train, y_train)
 
 from sklearn.metrics import accuracy_score
 
@@ -82,30 +85,14 @@ print(f'K-means clustering accuracy of testing data : {kmeans_accuracy:.3}')
 print('\n', classification_report(y_test, y_kmeans))
 
 # Test data를 입력해 target data를 예측 (매번 달라짐)
-predicted = rf.predict(X_test)
+predicted = classifier.predict(X_test)
 accuracy = accuracy_score(y_test, predicted)
 
-print('\n<Ensemble learning>')
-# oob_score(out of bag score)로써 예측이 얼마나 정확한가에 대한 추정치
-print('\n1. Random Forest Classifier')
+print('\n<K-Nearest Neighbors Classifier>')
 print('Confusion matrix : \n', confusion_matrix(y_test, predicted))
 print(f'The number of testing error : ', (y_test != predicted).sum())
-print(f'Out-of-bag score estimate: {rf.oob_score_:.3}')
 print(f'Mean accuracy score: {accuracy:.3}')
 print('\n', classification_report(y_test, predicted))
-
-# Gradient Boosting Classifier
-from sklearn.ensemble import GradientBoostingClassifier
-
-clf_gbc = GradientBoostingClassifier()
-clf_gbc.fit(X_train, y_train)
-y_pred = clf_gbc.predict(X_test)
-
-print('\n2. Gradient Boosting Classifier')
-print('Confusion matrix : \n', confusion_matrix(y_test, y_pred))
-print(f'The number of testing error : ', (y_test != y_pred).sum())
-print(f'Test accuracy : {(accuracy_score(y_test, y_pred)):.3}')
-print('\n', classification_report(y_test, y_pred))
 
 # firstBlood = input("firstBlood(True:1, False:0) : ")
 # firstTower = input("firstTower(True:1, False:0) : ")

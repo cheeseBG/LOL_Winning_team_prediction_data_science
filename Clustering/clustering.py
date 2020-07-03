@@ -69,8 +69,8 @@ x = x_data.iloc[:, :].values
 kmeans2 = KMeans(n_clusters=2)
 y_kmeans2 = kmeans2.fit_predict(x)
 
-# x_data['clustering'] = y_kmeans2
-# x_data.to_csv('cluster_result.csv', index=False)
+x_data['clustering'] = y_kmeans2
+x_data.to_csv('cluster_result.csv', index=False)
 
 if y_kmeans2[1] == 0:
     Lose = 0
