@@ -4,8 +4,10 @@ Date : 18 Jun 2020
 Author : seokhyeonSong
 """
 import seaborn as sn
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import math
 import warnings
 warnings.simplefilter("ignore",UserWarning)
 
@@ -33,6 +35,13 @@ output : none
 description : show histogram of pick rate of all lanes & all ranks
 """
 def histPick(wl):
+    q = np.log2(wl['Pick rate'])  # data extraction of pick rate
+    hist = plt.hist(q, bins=100, range=(q.min(), q.max()))  # histogram that has 100 x-bars of extracted data
+    plt.title('normalized Pick rate / all position / all rank', size=18, fontweight='bold')
+    plt.xlabel('Pick rate')
+    plt.ylabel('Count')
+    plt.show()
+
     x = wl['Pick rate'] # data extraction of pick rate
     hist = plt.hist(x, bins=100, range=(x.min(), x.max())) # histogram that has 100 x-bars of extracted data
     plt.title('Pick rate / all position / all rank', size=18, fontweight='bold')
@@ -198,6 +207,13 @@ description : shows pick rate data exploration of winning rate dataframe , boxpl
 """
 def pickratedata(wl):
     print("\nPick rate data :")
+    fig3, ax3 = plt.subplots()
+    logged = wl['Pick rate']
+    logged = np.log2(logged)
+    ax3.boxplot([logged], sym="b*")  # set boxplot of pick rate
+    plt.title("Box plot of log normalized Pick rate", size=18, fontweight='bold')
+    plt.xticks([1], ['normalized Pick rate'])
+    plt.show()
     fig2, ax2 = plt.subplots()
     ax2.boxplot([wl['Pick rate']], sym="b*") # set boxplot of pick rate
     plt.title("Box plot of Pick rate", size=18, fontweight='bold')
@@ -460,9 +476,10 @@ def TKData(windata,losedata,sumdata):
     win.set_title("Winning teams")
     lose.set_title("Lose teams")
     total.set_title("Total teams")
-    win = win.hist(winTK, bins=max(windata['towerKills'].drop_duplicates().tolist()))
-    lose = lose.hist(loseTK, bins=max(losedata['towerKills'].drop_duplicates().tolist()))
-    total = total.hist(totalTK, bins=max(sumdata['towerKills'].drop_duplicates().tolist()))
+    print(max(windata['towerKills'].drop_duplicates().tolist()))
+    win = win.hist(winTK, bins=int(max(windata['towerKills'].drop_duplicates().tolist())))
+    lose = lose.hist(loseTK, bins=int(max(losedata['towerKills'].drop_duplicates().tolist())))
+    total = total.hist(totalTK, bins=int(max(sumdata['towerKills'].drop_duplicates().tolist())))
     plt.show()
     fig2, ax2 =plt.subplots()
     ax2.boxplot([winTK,loseTK,totalTK], sym="b*") # get boxplots of winning team, lose team, total team's tower kill
@@ -500,9 +517,9 @@ def IKData(windata,losedata,sumdata):
     win.set_title("Winning teams")
     lose.set_title("Lose teams")
     total.set_title("Total teams")
-    win = win.hist(winTK, bins=max(windata['inhibitorKills'].drop_duplicates().tolist()))
-    lose = lose.hist(loseTK, bins=max(losedata['inhibitorKills'].drop_duplicates().tolist()))
-    total = total.hist(totalTK, bins=max(sumdata['inhibitorKills'].drop_duplicates().tolist()))
+    win = win.hist(winTK, bins=int(max(windata['inhibitorKills'].drop_duplicates().tolist())))
+    lose = lose.hist(loseTK, bins=int(max(losedata['inhibitorKills'].drop_duplicates().tolist())))
+    total = total.hist(totalTK, bins=int(max(sumdata['inhibitorKills'].drop_duplicates().tolist())))
     plt.show()
     fig2, ax2 =plt.subplots()
     ax2.boxplot([winTK,loseTK,totalTK], sym="b*") # get boxplots of winning team, lose team, total team's inhibitor destroy
@@ -540,9 +557,9 @@ def BKData(windata,losedata,sumdata):
     win.set_title("Winning teams")
     lose.set_title("Lose teams")
     total.set_title("Total teams")
-    win = win.hist(winTK, bins=max(windata['baronKills'].drop_duplicates().tolist()))
-    lose = lose.hist(loseTK, bins=max(losedata['baronKills'].drop_duplicates().tolist()))
-    total = total.hist(totalTK, bins=max(sumdata['baronKills'].drop_duplicates().tolist()))
+    win = win.hist(winTK, bins=int(max(windata['baronKills'].drop_duplicates().tolist())))
+    lose = lose.hist(loseTK, bins=int(max(losedata['baronKills'].drop_duplicates().tolist())))
+    total = total.hist(totalTK, bins=int(max(sumdata['baronKills'].drop_duplicates().tolist())))
     plt.show()
     fig2, ax2 =plt.subplots()
     ax2.boxplot([winTK,loseTK,totalTK], sym="b*") # get boxplots of winning team, lose team, total team's baron kill
@@ -580,9 +597,9 @@ def DKData(windata,losedata,sumdata):
     win.set_title("Winning teams")
     lose.set_title("Lose teams")
     total.set_title("Total teams")
-    win = win.hist(winTK, bins=max(windata['dragonKills'].drop_duplicates().tolist()))
-    lose = lose.hist(loseTK, bins=max(losedata['dragonKills'].drop_duplicates().tolist()))
-    total = total.hist(totalTK, bins=max(sumdata['dragonKills'].drop_duplicates().tolist()))
+    win = win.hist(winTK, bins=int(max(windata['dragonKills'].drop_duplicates().tolist())))
+    lose = lose.hist(loseTK, bins=int(max(losedata['dragonKills'].drop_duplicates().tolist())))
+    total = total.hist(totalTK, bins=int(max(sumdata['dragonKills'].drop_duplicates().tolist())))
     plt.show()
     fig2, ax2 =plt.subplots()
     ax2.boxplot([winTK,loseTK,totalTK], sym="b*")
@@ -620,9 +637,9 @@ def RKData(windata,losedata,sumdata):
     win.set_title("Winning teams")
     lose.set_title("Lose teams")
     total.set_title("Total teams")
-    win = win.hist(winTK, bins=max(windata['riftHeraldKills'].drop_duplicates().tolist()))
-    lose = lose.hist(loseTK, bins=max(losedata['riftHeraldKills'].drop_duplicates().tolist()))
-    total = total.hist(totalTK, bins=max(sumdata['riftHeraldKills'].drop_duplicates().tolist()))
+    win = win.hist(winTK, bins=int(max(windata['riftHeraldKills'].drop_duplicates().tolist())))
+    lose = lose.hist(loseTK, bins=int(max(losedata['riftHeraldKills'].drop_duplicates().tolist())))
+    total = total.hist(totalTK, bins=int(max(sumdata['riftHeraldKills'].drop_duplicates().tolist())))
     plt.show()
     fig2, ax2 =plt.subplots()
     ax2.boxplot([winTK,loseTK,totalTK], sym="b*") # get boxplots of winning team, lose team, total team's riftherald kill
